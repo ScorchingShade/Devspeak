@@ -7,11 +7,12 @@ import "semantic-ui-css/semantic.min.css"
 import {BrowserRouter as Router, Switch,Route} from 'react-router-dom'
 import Register from './components/Auth/Register/Register.component';
 import Login from './components/Auth/Login/Login.component';
+import "./index.css"
 
 
 
 ReactDOM.render(
-  <React.StrictMode>
+  
     <Router>
       <Switch>
         
@@ -22,7 +23,7 @@ ReactDOM.render(
       </Switch>
     </Router>
     
-  </React.StrictMode>,
+  ,
   document.getElementById('root')
 );
 
