@@ -23,7 +23,7 @@ function Login() {
   const [errorState, seterrorState] = useState(errors);
   const [userState, setuserState] = useState(user);
   const [isLoading, setIsLoading] = useState(false);
-//   const [isSuccess, setIsSuccess] = useState(false);
+
 
 
   const handleInput = (event) => {
@@ -38,7 +38,6 @@ function Login() {
 
   const onSubmit = (event) => {
     seterrorState(() => []);
-    // setIsSuccess(false);
     if (checkForm()) {
       setIsLoading(true);
       firebase
