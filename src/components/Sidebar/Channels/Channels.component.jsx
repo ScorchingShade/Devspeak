@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Button, Form, Icon, Menu, Modal, Segment } from "semantic-ui-react";
 import { connect } from "react-redux";
+import firebase from "../../../server/firebase"
 
-function Channels() {
+function Channels(props) {
   const [modalOpenState, setModalOpenState] = useState(false);
   const [channelAddState, setChannelAddState] = useState({Name:'', Description:''});
 
+  const channelsRef=firebase.database().ref("channels");
   
 
   const openModal = () => {
@@ -16,7 +18,21 @@ function Channels() {
     setModalOpenState(false);
   };
 
-  const onSubmit = () => {};
+  const onSubmit = () => {
+
+    const key = channelsRef.push().key;
+
+    const channel={
+        id:key,
+        name:channelAddState.name,
+        description:channelAddState.description,
+        created_by:{
+            name: props.user.displayName,
+            avatar: props.user.photoURL,
+        }
+    };
+
+  };
 
   const handleInput = (e) => {
     let target = e.target;
@@ -51,16 +67,16 @@ function Channels() {
               {/* name and value needs to be the same as specified in the state json object */}
 
               <Form.Input
-                value={channelAddState.Name}
-                name="Name"
+                value={channelAddState.name}
+                name="name"
                 type="text"
                 placeholder="Enter Channel Name"
                 onChange={handleInput}
               />
 
               <Form.Input
-                value={channelAddState.Description}
-                name="Description"
+                value={channelAddState.description}
+                name="description"
                 onChange={handleInput}
                 type="text"
                 placeholder="User Channel Description"
@@ -82,4 +98,11 @@ function Channels() {
   );
 }
 
-export default connect()(Channels);
+const mapStateToProps=(state)=>{
+    return {
+        user: state.user.currentUser
+    }
+}
+
+
+export default connect(mapStateToProps)(Channels);
