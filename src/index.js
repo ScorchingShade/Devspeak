@@ -10,19 +10,36 @@ import Register from "./components/Auth/Register/Register.component";
 import Login from "./components/Auth/Login/Login.component";
 import "./index.css";
 import firebase from "./server/firebase";
-import { Provider } from "react-redux";
+import { Provider, connect } from "react-redux";
 import { createStore } from "redux";
+import { combinedReducers } from "./store/reducer";
+import { setUser } from "./store/actioncreator";
+
+
+
+const store = createStore(combinedReducers)
+
+
+
 
 const Index = (props) => {
   useEffect(() => {
+
+
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
+        props.setUser(user);
         props.history.push("/");
       } else {
+        props.setUser(null);
         props.history.push("/login");
       }
     });
   }, []);
+
+  console.log(props.currentUser);
+
+
 
   return (
     <Switch>
@@ -33,10 +50,23 @@ const Index = (props) => {
   );
 };
 
-const IndexWithRouter = withRouter(Index);
+const mapStateToProps = (state)=>{
+  return{
+    currentUser: state.user.currentUser,
+  }
+  
+}
+
+const mapDispatchToProps = (dispatch)=>{
+  return {
+    setUser:(user)=>{dispatch(setUser(user))}
+  }
+}
+
+const IndexWithRouter =withRouter(connect(mapStateToProps, mapDispatchToProps)(Index));
 
 ReactDOM.render(
-  <Provider>
+  <Provider store={store}>
     <Router>
       <IndexWithRouter />
     </Router>
