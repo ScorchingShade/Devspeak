@@ -8,7 +8,7 @@ import {
   Message,
   Segment,
 } from "semantic-ui-react";
-import classes from "./Register.module.css";
+import classes from "../Auth.module.css"
 import firebase from "../../../server/firebase.js";
 import {Link} from 'react-router-dom'
 
