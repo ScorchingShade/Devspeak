@@ -1,52 +1,48 @@
-import React, { useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import React, { useEffect } from "react";
+import ReactDOM from "react-dom";
 
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import "semantic-ui-css/semantic.min.css"
-import {BrowserRouter as Router, Switch,Route} from 'react-router-dom'
-import {withRouter} from 'react-router'
-import Register from './components/Auth/Register/Register.component';
-import Login from './components/Auth/Login/Login.component';
-import "./index.css"
-import firebase from './server/firebase'
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
+import "semantic-ui-css/semantic.min.css";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { withRouter } from "react-router";
+import Register from "./components/Auth/Register/Register.component";
+import Login from "./components/Auth/Login/Login.component";
+import "./index.css";
+import firebase from "./server/firebase";
+import { Provider } from "react-redux";
+import { createStore } from "redux";
 
-
-const Index=(props)=>{
-
+const Index = (props) => {
   useEffect(() => {
-    firebase.auth().onAuthStateChanged((user)=>{
-      if(user){
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
         props.history.push("/");
-      }else{
+      } else {
         props.history.push("/login");
       }
-    })
-  }, [])
+    });
+  }, []);
 
- 
-  return(
+  return (
     <Switch>
-        
-    <Route exact path="/register" component={Register}/>
-    <Route exact path="/login" component={Login}/>
-    <Route  path="/" component={App}/>
-    
-  </Switch>
-  )
-}
+      <Route exact path="/register" component={Register} />
+      <Route exact path="/login" component={Login} />
+      <Route path="/" component={App} />
+    </Switch>
+  );
+};
 
-const IndexWithRouter=withRouter(Index);
-
+const IndexWithRouter = withRouter(Index);
 
 ReactDOM.render(
-  
+  <Provider>
     <Router>
-     <IndexWithRouter/>
+      <IndexWithRouter />
     </Router>
-    
-  ,
-  document.getElementById('root')
+  </Provider>,
+
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function
