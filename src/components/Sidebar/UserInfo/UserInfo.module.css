@@ -1,0 +1,17 @@
+.userInfoGridRow{
+    padding:1.3rem;
+    
+}
+
+.userInfoDisplayName{
+    padding:.25rem;
+    text-shadow: 1px 5px rgba(0, 0, 0, 0.7);
+}
+
+.userInfoDisplayName{
+    text-shadow: 1px 5px rgba(0, 0, 0, 0.7);
+}
+
+.userInfoDisplayImg{
+    box-shadow:  2px 5px rgba(0, 0, 0, 0.7);
+}
