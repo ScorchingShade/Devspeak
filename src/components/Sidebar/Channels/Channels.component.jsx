@@ -22,6 +22,10 @@ function Channels(props) {
       setChannelsState((currentState) => {
         let updatedState = [...currentState];
         updatedState.push(snap.val());
+        if(updatedState.length===1){
+            
+            props.selectChannel(updatedState[0])
+        }
         return updatedState;
       });
     });
@@ -48,9 +52,9 @@ function Channels(props) {
           <Menu.Item
             key={channel.id}
             name={channel.name}
-            className={classes.item}
+            className={(channel.id!=props.channel.id)?classes.item:classes.activex}
             onClick={() => props.selectChannel(channel)}
-            active={channel.id===props.channel.id}
+            active={channel.id==props.channel.id}
           ></Menu.Item>
         );
       });
@@ -155,7 +159,7 @@ function Channels(props) {
 const mapStateToProps = (state) => {
   return {
     user: state.user.currentUser,
-    channel:state.channel.currentChannel
+    channel: state.channel.currentChannel
   };
 };
 

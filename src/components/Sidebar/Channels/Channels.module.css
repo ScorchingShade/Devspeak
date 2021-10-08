@@ -1,5 +1,6 @@
 .item{
     color: rgb(170, 184, 190) !important;
+    font-weight: bold !important;
     
 }
 
@@ -11,4 +12,16 @@
 
 .item span{
     font-size: 1.1rem;
+}
+
+.activex {
+    background-color: var(--secondary-color) !important;
+    font-weight: bold !important;
+    font-size: 1.1rem;
+    color:black !important;
+  }
+
+.activex:hover{
+    color:rgb(77, 75, 75) !important;
+    background-color: var(--secondary-color-hover) !important;
 }
