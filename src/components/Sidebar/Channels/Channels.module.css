@@ -1,0 +1,14 @@
+.item{
+    color: rgb(170, 184, 190) !important;
+    
+}
+
+.item:hover{
+    color: rgb(255, 255, 255) !important;
+    cursor: pointer;
+    
+}
+
+.item span{
+    font-size: 1.1rem;
+}

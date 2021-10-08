@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { Button, Form, Icon, Menu, Modal, Segment } from "semantic-ui-react";
 import { connect } from "react-redux";
 import firebase from "../../../server/firebase";
+import classes from './Channels.module.css'
 
 function Channels(props) {
+  const [isLoading, setIsLoading] = useState(false);
   const [modalOpenState, setModalOpenState] = useState(false);
   const [channelAddState, setChannelAddState] = useState({
-    Name: "",
-    Description: "",
+    name: "",
+    description: "",
   });
 
   const channelsRef = firebase.database().ref("channels");
@@ -20,14 +22,15 @@ function Channels(props) {
     setModalOpenState(false);
   };
 
-  const checkIfFormValid=()=>{
-    return channelAddState && channelAddState.name && channelAddState.description;
-}
+  const checkIfFormValid = () => {
+    return (
+      channelAddState && channelAddState.name && channelAddState.description
+    );
+  };
 
   const onSubmit = () => {
-
-    if(!checkIfFormValid()){
-        return;
+    if (!checkIfFormValid()) {
+      return;
     }
 
     const key = channelsRef.push().key;
@@ -41,20 +44,19 @@ function Channels(props) {
         avatar: props.user.photoURL,
       },
     };
-
+    setIsLoading(true);
     channelsRef
       .child(key)
       .update(channel)
       .then(() => {
         setChannelAddState({ name: "", description: "" });
-        console.log("saved");
+        setIsLoading(false);
+        closeModal();
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
-
 
   const handleInput = (e) => {
     let target = e.target;
@@ -67,14 +69,14 @@ function Channels(props) {
 
   return (
     <>
-      <Menu.Menu>
-        <Menu.Item>
+      <Menu.Menu className={classes.menu}> 
+        <Menu.Item className={classes.item}>
           <span>
             <Icon name="exchange" /> Channels
           </span>
           (0)
         </Menu.Item>
-        <Menu.Item>
+        <Menu.Item className={classes.item}>
           <span onClick={openModal}>
             <Icon name="add" /> ADD
           </span>
@@ -107,7 +109,7 @@ function Channels(props) {
           </Form>
         </Modal.Content>
         <Modal.Actions>
-          <Button onClick={onSubmit}>
+          <Button loading={isLoading} onClick={onSubmit}>
             <Icon name="checkmark" /> Save
           </Button>
 
