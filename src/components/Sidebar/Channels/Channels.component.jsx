@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { Button, Form, Icon, Menu, Modal, Segment } from "semantic-ui-react";
 import { connect } from "react-redux";
-import firebase from "../../../server/firebase"
+import firebase from "../../../server/firebase";
 
 function Channels(props) {
   const [modalOpenState, setModalOpenState] = useState(false);
-  const [channelAddState, setChannelAddState] = useState({Name:'', Description:''});
+  const [channelAddState, setChannelAddState] = useState({
+    Name: "",
+    Description: "",
+  });
 
-  const channelsRef=firebase.database().ref("channels");
-  
+  const channelsRef = firebase.database().ref("channels");
 
   const openModal = () => {
     setModalOpenState(true);
@@ -18,21 +20,41 @@ function Channels(props) {
     setModalOpenState(false);
   };
 
+  const checkIfFormValid=()=>{
+    return channelAddState && channelAddState.name && channelAddState.description;
+}
+
   const onSubmit = () => {
+
+    if(!checkIfFormValid()){
+        return;
+    }
 
     const key = channelsRef.push().key;
 
-    const channel={
-        id:key,
-        name:channelAddState.name,
-        description:channelAddState.description,
-        created_by:{
-            name: props.user.displayName,
-            avatar: props.user.photoURL,
-        }
+    const channel = {
+      id: key,
+      name: channelAddState.name,
+      description: channelAddState.description,
+      created_by: {
+        name: props.user.displayName,
+        avatar: props.user.photoURL,
+      },
     };
 
+    channelsRef
+      .child(key)
+      .update(channel)
+      .then(() => {
+        setChannelAddState({ name: "", description: "" });
+        console.log("saved");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
+
+
 
   const handleInput = (e) => {
     let target = e.target;
@@ -98,11 +120,10 @@ function Channels(props) {
   );
 }
 
-const mapStateToProps=(state)=>{
-    return {
-        user: state.user.currentUser
-    }
-}
-
+const mapStateToProps = (state) => {
+  return {
+    user: state.user.currentUser,
+  };
+};
 
 export default connect(mapStateToProps)(Channels);
