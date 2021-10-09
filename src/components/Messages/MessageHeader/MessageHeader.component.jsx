@@ -1,16 +1,18 @@
 import React from 'react'
 import {Header, Icon, Input, Segment} from 'semantic-ui-react'
 
-function MessageHeader() {
+function MessageHeader(props) {
     return (
        <Segment clearing>
 
            <Header floated="left" fluid="true" as="h2">
                <span>
-                   CHANNEL
+                   {props.channelName}
                    <Icon name="star outline" />
                </span>
-               <Header.Subheader>3 Users</Header.Subheader>
+               {props.uniqueUsers>1?<Header.Subheader>{props.uniqueUsers} Users</Header.Subheader>:
+               <Header.Subheader>{props.uniqueUsers} User</Header.Subheader>
+               }
 
            </Header>
            <Header floated="right">
@@ -19,6 +21,7 @@ function MessageHeader() {
                     icon="search"
                     placeholder="Search Messages"
                     size="mini"
+                    onChange={props.searchTermChange}
 
                />
 
