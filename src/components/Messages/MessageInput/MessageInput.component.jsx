@@ -1,28 +1,68 @@
-import React from 'react'
-import { Button, Input, Segment } from 'semantic-ui-react'
+import React, { useState } from "react";
+import { connect } from "react-redux";
+import { Button, Input, Segment } from "semantic-ui-react";
+import firebase from "../../../server/firebase";
 
-function MessageInput() {
+function MessageInput(props) {
+  const messageRef = firebase.database().ref("messages");
+  const [messageState, setMessageState] = useState("");
 
-    const createActionButtons=()=>{
-        return <>
-            <Button icon="send"/>
-            <Button icon ="upload"/>
-        </>
+  const createMessageInfo = () => {
+    return {
+      user: {
+        avatar: props.user.photoURL,
+        name: props.user.displayName,
+        id: props.user.uid,
+      },
+      content: messageState,
+      timestamp: firebase.database.ServerValue.TIMESTAMP,
+    };
+  };
+
+  const onSubmit = () => {
+    if (messageState) {
+      messageRef
+        .child(props.channel.id)
+        .push()
+        .set(createMessageInfo())
+        .then(() => console.log("sent"))
+        .catch((err) => console.log(err));
     }
+  };
 
+  const onMessageChange = (e) => {
+    const target = e.target;
+    setMessageState(target.value);
+  };
 
+  const createActionButtons = () => {
     return (
-        <Segment>
-            <Input
-                fluid="true"
-                name="message"
-                value="test message"
-                label={createActionButtons()}
-                labelPosition="right"
-            
-            />
-        </Segment>
-    )
+      <>
+        <Button icon="send" onClick={onSubmit} />
+        <Button icon="upload" />
+      </>
+    );
+  };
+
+  return (
+    <Segment>
+      <Input
+        onChange={onMessageChange}
+        fluid="true"
+        name="message"
+        value={messageState}
+        label={createActionButtons()}
+        labelPosition="right"
+      />
+    </Segment>
+  );
 }
 
-export default MessageInput
+const mapStateToProps = (state) => {
+  return {
+    user: state.user.currentUser,
+    channel: state.channel.currentChannel,
+  };
+};
+
+export default connect(mapStateToProps)(MessageInput);
