@@ -10,7 +10,13 @@ function PrivateChat(props) {
 
   const [usersState, setUsersState] = useState([]);
 
+  const [connectedUsersState, setConnectedUsersState] = useState([]);
+
   const usersRef = firebase.database().ref("users");
+
+  const connectedRef=firebase.database().ref(".info/connected");
+
+  const statusRef = firebase.database().ref("status");
 
   useEffect(() => {
     usersRef.on("child_added", (snap) => {
@@ -29,16 +35,49 @@ function PrivateChat(props) {
       });
     });
 
+    connectedRef.on("value",snap =>{
+        if(props.user && snap.val()){
+            const userStatusRef = statusRef.child(props.user.uid);
+            userStatusRef.set(true);
+            userStatusRef.onDisconnect().remove();
+        }
+    })
+
     return ()=>{
-        usersRef.off();
+        {usersRef.off(); connectedRef.off();}
     }
-  }, []);
+  }, [props.user]);
+
+  useEffect(()=>{
+
+    statusRef.on("child_added", snap=>{
+        setConnectedUsersState((currentState)=>{
+            let updatedState =[...currentState];
+            updatedState.push(snap.key);
+        
+            return updatedState;
+        })
+    })
+
+    statusRef.on("child_removed", snap=>{
+        setConnectedUsersState((currentState)=>{
+            let updatedState =[...currentState];
+            let index=updatedState.indexOf(snap.key)
+            updatedState.splice(index,1);
+            
+            return updatedState;
+        })
+    })
+
+    return ()=> statusRef.off();
+
+},[usersState])
 
 
 
   const displayUsers = () => {
     if (usersState.length > 0) {
-      return usersState.filter((user)=>(user.id!==props.user.uid)).map((user) => {
+      return usersState.filter((user)=>(props.user?user.id!==props.user.uid:null)).map((user) => {
         return (
         
           <Menu.Item
@@ -52,7 +91,8 @@ function PrivateChat(props) {
                props.channel && generateChannelId(user.id) != props.channel.id ? classes.item : classes.activex
               }
           >
-            <Avatar message={user} userName={user.name}/>  
+         <Avatar message={user} userName={user.name} userState={connectedUsersState} connectedUsersState={connectedUsersState}/> 
+         <Icon name="circle" color={`${connectedUsersState.indexOf(user.id)!==-1?"green":"red"}`} style={{marginTop: "-23px"}}/>
           </Menu.Item>
         );
       });
