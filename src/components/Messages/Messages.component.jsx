@@ -16,6 +16,7 @@ function Messages(props) {
 
     useEffect(() => {
         if(props.channel){
+            setMessagesState([])
             messageRef.child(props.channel.id).on('child_added',(snap)=>{
 
                 setMessagesState((currentState)=>{
@@ -34,9 +35,11 @@ function Messages(props) {
 
 
     const displayMessages=()=>{
+
+        
         if(messagesState.length>0){
            return messagesState.map((message)=>{
-            return <MessageContent key={message.timestamp} message={message} ownMessage={message.user.id===props.user.uid}></MessageContent>
+            return <MessageContent key={message.timestamp+Math.floor(Math.random() * 1000)} message={message} ownMessage={!props.user?'':message.user.id===props.user.uid}></MessageContent>
             })
         }
     }
