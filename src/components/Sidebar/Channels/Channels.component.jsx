@@ -67,7 +67,11 @@ function Channels(props) {
             className={
                props.channel && channel.id != props.channel.id ? classes.item : classes.activex
               }
-          ></Menu.Item>
+
+              
+          >
+            {`# ${channel.name}`}
+          </Menu.Item>
         );
       });
     }
@@ -119,10 +123,12 @@ function Channels(props) {
           <span>
             <Icon name="exchange" /> Channels
           </span>
+          <span>
           ({channelsState.length})
+          </span>
         </Menu.Item>
         {displayChannels()}
-        <Menu.Item className={classes.item}>
+        <Menu.Item className={classes.item} style={{marginTop:'0.8rem'}}>
           <span onClick={openModal}>
             <Icon name="add" /> ADD
           </span>
