@@ -70,7 +70,7 @@ function Channels(props) {
 
               
           >
-            {`# ${channel.name}`}
+           <span style={{fontSize: '1rem'}}> {`# ${channel.name}`}</span>
           </Menu.Item>
         );
       });
