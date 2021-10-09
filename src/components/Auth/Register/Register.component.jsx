@@ -105,7 +105,8 @@ function Register() {
       createdUser.user
         .updateProfile({
           displayName: userState.userName,
-          photoURL: `http://gravatar.com/avatar/${createdUser.user.uid}?d=identicon`,
+          
+          photoURL: `https://avatars.dicebear.com/api/bottts/${createdUser.user.uid}.svg`,
         })
         .then(() => {
           setIsLoading(false);

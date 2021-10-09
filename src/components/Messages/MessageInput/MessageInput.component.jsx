@@ -25,7 +25,7 @@ function MessageInput(props) {
         .child(props.channel.id)
         .push()
         .set(createMessageInfo())
-        .then(() => console.log("sent"))
+        .then(() => setMessageState(""))
         .catch((err) => console.log(err));
     }
   };
@@ -48,7 +48,7 @@ function MessageInput(props) {
     <Segment>
       <Input
         onChange={onMessageChange}
-        fluid="true"
+        fluid={true}
         name="message"
         value={messageState}
         label={createActionButtons()}

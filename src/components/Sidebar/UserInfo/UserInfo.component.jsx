@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Dropdown, Grid, Header, Icon, Image } from "semantic-ui-react";
 import { connect } from "react-redux";
 import classes from "./UserInfo.module.css";
@@ -22,6 +22,14 @@ function UserInfo(props) {
       .then(() => console.log("user signed out"));
   };
 
+  const [userPhoto, setUserPhoto] = useState(null)
+
+  useEffect(() => {
+    if(props.user){
+      setUserPhoto(props.user.photoURL)
+    }
+  },[props.user])
+
   if (props.user) {
     return (
       <Grid>
@@ -36,7 +44,7 @@ function UserInfo(props) {
                 trigger={
                   <span>
                     <Image
-                      src={props.user.photoURL}
+                      src={userPhoto}
                       avatar
                       className={classes.userInfoDisplayImg}
                     ></Image>
