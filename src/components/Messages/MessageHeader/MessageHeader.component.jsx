@@ -1,34 +1,42 @@
-import React from 'react'
-import {Header, Icon, Input, Segment} from 'semantic-ui-react'
+import React from "react";
+import { Header, Icon, Image, Input, Segment } from "semantic-ui-react";
 
 function MessageHeader(props) {
-    return (
-       <Segment clearing>
+  return (
+    <Segment clearing>
+      <Header floated="left" fluid="true" as="h2">
+        <span>
+          {props.isPrivateChat ? (
+            <span>
+              <Image src={props.user.photoURL} avatar></Image>{" "}
+              {props.channelName}
+            </span>
+          ) : (
+            "# " + props.channelName
+          )}
 
-           <Header floated="left" fluid="true" as="h2">
-               <span>
-                   {props.channelName}
-                   <Icon name="star outline" />
-               </span>
-               {props.uniqueUsers>1?<Header.Subheader>{props.uniqueUsers} Users</Header.Subheader>:
-               <Header.Subheader>{props.uniqueUsers} User</Header.Subheader>
-               }
+          {props.isPrivateChat ? "" : <Icon name="star outline" />}
+        </span>
 
-           </Header>
-           <Header floated="right">
-               <Input
-                    name="search"
-                    icon="search"
-                    placeholder="Search Messages"
-                    size="mini"
-                    onChange={props.searchTermChange}
-
-               />
-
-           </Header>
-
-       </Segment>
-    )
+        {props.isPrivateChat ? (
+          ""
+        ) : props.uniqueUsers > 1 ? (
+          <Header.Subheader>{props.uniqueUsers} Users</Header.Subheader>
+        ) : (
+          <Header.Subheader>{props.uniqueUsers} User</Header.Subheader>
+        )}
+      </Header>
+      <Header floated="right">
+        <Input
+          name="search"
+          icon="search"
+          placeholder="Search Messages"
+          size="mini"
+          onChange={props.searchTermChange}
+        />
+      </Header>
+    </Segment>
+  );
 }
 
-export default MessageHeader
+export default MessageHeader;

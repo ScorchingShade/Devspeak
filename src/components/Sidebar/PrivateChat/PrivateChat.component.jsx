@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {  Comment, Icon, Menu, } from "semantic-ui-react";
+import {  Icon, Menu} from "semantic-ui-react";
 import { connect } from "react-redux";
 import firebase from "../../../server/firebase";
 import classes from "./PrivateChat.component.module.css";
@@ -14,15 +14,15 @@ function PrivateChat(props) {
 
   useEffect(() => {
     usersRef.on("child_added", (snap) => {
-      console.log(snap.val());
+      
       setUsersState((currentState) => {
         let updatedState = [...currentState];
 
         let user =snap.val();
         user.name = user.displayName;
         user.id =snap.key;
-        
-
+        user.isPrivateChat = true;
+         
         updatedState.push(user);
       
         return updatedState;
@@ -45,11 +45,11 @@ function PrivateChat(props) {
             key={user.id}
             name={user.name}
             
-            onClick={() => props.selectChannel(user)}
-            active={props.channel && user.id == props.channel.id}
+            onClick={() => selectUser(user)}
+            active={props.channel && generateChannelId(user.id) == props.channel.id}
 
             className={
-               props.channel && user.id != props.channel.id ? classes.item : classes.activex
+               props.channel && generateChannelId(user.id) != props.channel.id ? classes.item : classes.activex
               }
           >
             <Avatar message={user} userName={user.name}/>  
@@ -59,6 +59,20 @@ function PrivateChat(props) {
     }
   };
 
+  const selectUser = (user)=>{
+      let userTemp ={...user}
+      userTemp.id=generateChannelId(user.id);
+    props.selectChannel(userTemp)
+  }
+
+  const generateChannelId=(userId)=>{
+      if(props.user.uid < userId){
+          return props.user.uid + userId;
+      }
+      else{
+          return userId + props.user.uid;
+      }
+  }
 
   return (
     

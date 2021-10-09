@@ -126,6 +126,7 @@ function Register() {
       .set({
         displayName: createdUser.user.displayName,
         photoURL: createdUser.user.photoURL,
+        
       })
       .then(() => {
         setIsLoading(false);

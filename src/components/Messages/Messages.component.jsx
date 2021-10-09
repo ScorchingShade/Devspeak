@@ -77,8 +77,10 @@ function Messages(props) {
     <div className={classes.messageContainer}>
       <MessageHeader
         channelName={props.channel?.name}
+        isPrivateChat={props.channel?.isPrivateChat}
         uniqueUsers={uniqueusersCount()}
         searchTermChange={searchTermChange}
+        user={props.channel}
       />
 
       <Segment className={classes.messagecontent}>
