@@ -26,6 +26,10 @@ function Channels(props) {
         return updatedState;
       });
     });
+
+    return ()=>{
+        channelsRef.off();
+    }
   }, []);
 
   useEffect(() =>{
