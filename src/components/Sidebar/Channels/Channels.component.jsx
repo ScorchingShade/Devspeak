@@ -22,14 +22,17 @@ function Channels(props) {
       setChannelsState((currentState) => {
         let updatedState = [...currentState];
         updatedState.push(snap.val());
-        if(updatedState.length===1){
-            
-            props.selectChannel(updatedState[0])
-        }
+      
         return updatedState;
       });
     });
   }, []);
+
+  useEffect(() =>{
+    if (channelsState.length > 0) {
+        props.selectChannel(channelsState[0]);
+      }
+  },[!props.channel ? channelsState:null])
 
   const openModal = () => {
     setModalOpenState(true);
@@ -49,12 +52,17 @@ function Channels(props) {
     if (channelsState.length > 0) {
       return channelsState.map((channel) => {
         return (
+        
           <Menu.Item
             key={channel.id}
             name={channel.name}
-            className={(channel.id!=props.channel.id)?classes.item:classes.activex}
+            
             onClick={() => props.selectChannel(channel)}
-            active={channel.id==props.channel.id}
+            active={props.channel && channel.id == props.channel.id}
+
+            className={
+               props.channel && channel.id != props.channel.id ? classes.item : classes.activex
+              }
           ></Menu.Item>
         );
       });
@@ -159,7 +167,7 @@ function Channels(props) {
 const mapStateToProps = (state) => {
   return {
     user: state.user.currentUser,
-    channel: state.channel.currentChannel
+    channel: state.channel.currentChannel,
   };
 };
 
