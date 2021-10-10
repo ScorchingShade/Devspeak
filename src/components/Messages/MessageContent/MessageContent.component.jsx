@@ -18,7 +18,7 @@ function MessageContent(props) {
         </Comment.Metadata>
 
         {props.message.image ? (
-          <Image src={props.message.image} />
+          <Image src={props.message.image} onLoad={props.imageLoaded}/>
         ) : (
           <Comment.Text>{props.message.content}</Comment.Text>
         )}

@@ -14,6 +14,7 @@ import { Provider, connect } from "react-redux";
 import { createStore } from "redux";
 import { combinedReducers } from "./store/reducer";
 import { setUser } from "./store/actioncreator";
+import { AppLoader } from "./components/AppLoader/AppLoader.component";
 
 
 
@@ -42,17 +43,21 @@ const Index = (props) => {
 
 
   return (
+    <>
+    <AppLoader loading={props.loading && props.location.pathname==="/"} />
     <Switch>
       <Route exact path="/register" component={Register} />
       <Route exact path="/login" component={Login} />
       <Route path="/" component={App} />
     </Switch>
+    </>
   );
 };
 
 const mapStateToProps = (state)=>{
   return{
     currentUser: state.user.currentUser,
+    loading : state.channel.loading
   }
   
 }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import MessageHeader from "./MessageHeader/MessageHeader.component";
 import MessageInput from "./MessageInput/MessageInput.component";
 
@@ -18,6 +18,8 @@ function Messages(props) {
   const [messagesState, setMessagesState] = useState([]);
 
   const [searchTermState, setSearchTermState]= useState("");
+
+  let divRef = useRef();
 
   
 
@@ -54,6 +56,9 @@ function Messages(props) {
   }, [props.user]);
 
 
+  useEffect(()=> {
+    divRef.scrollIntoView({behavior : 'smooth'});
+},[messagesState])
 
   const displayMessages = () => {
       let messagesToDisplay =searchTermState ? filterMessageBySearchTerm():messagesState
@@ -61,6 +66,7 @@ function Messages(props) {
       return messagesToDisplay.map((message) => {
         return (
           <MessageContent
+          imageLoaded={imageLoaded} 
             key={message.timestamp + Math.floor(Math.random() * 1000)}
             message={message}
             ownMessage={!props.user ? "" : message.user.id === props.user.uid}
@@ -69,6 +75,10 @@ function Messages(props) {
       });
     }
   };
+
+  const imageLoaded= () => {
+    divRef.scrollIntoView({behavior : 'smooth'});
+}
 
   const uniqueusersCount = () => {
     const uniqueUsers = messagesState.reduce((acc, message) => {
@@ -126,7 +136,9 @@ const isStarred = () => {
       />
 
       <Segment className={classes.messagecontent}>
-        <Comment.Group>{displayMessages()}</Comment.Group>
+        <Comment.Group>{displayMessages()}
+            <div ref={currentEl => divRef = currentEl}></div>
+        </Comment.Group>
       </Segment>
 
       <MessageInput />
