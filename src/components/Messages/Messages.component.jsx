@@ -10,10 +10,13 @@ import classes from "./Messages.component.module.css";
 
 function Messages(props) {
   const messageRef = firebase.database().ref("messages");
+  const usersRef=firebase.database().ref("users");
 
   const [messagesState, setMessagesState] = useState([]);
 
-  const [searchTermState, setSearchTermState]= useState("")
+  const [searchTermState, setSearchTermState]= useState("");
+
+  
 
   useEffect(() => {
     if (props.channel) {
@@ -73,9 +76,15 @@ function Messages(props) {
       return messages;
   }
 
+  const starChange=()=>{
+
+  }
+
   return (
     <div className={classes.messageContainer}>
       <MessageHeader
+        starChange={starchange}
+        starred={false}
         channelName={props.channel?.name}
         isPrivateChat={props.channel?.isPrivateChat}
         uniqueUsers={uniqueusersCount()}

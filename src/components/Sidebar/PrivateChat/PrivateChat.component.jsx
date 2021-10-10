@@ -59,15 +59,15 @@ function PrivateChat(props) {
         })
     })
 
-    statusRef.on("child_removed", snap=>{
-        setConnectedUsersState((currentState)=>{
-            let updatedState =[...currentState];
-            let index=updatedState.indexOf(snap.key)
-            updatedState.splice(index,1);
-            
+    statusRef.on("child_removed", snap => {
+        setConnectedUsersState((currentState) => {
+            let updatedState = [...currentState];
+
+            let index = updatedState.indexOf(snap.key);
+            updatedState.splice(index, 1);
             return updatedState;
         })
-    })
+    });
 
     return ()=> statusRef.off();
 
