@@ -62,10 +62,11 @@ function Channels(props) {
             name={channel.name}
             
             onClick={() => props.selectChannel(channel)}
-            active={props.channel && channel.id == props.channel.id}
+            active={props.channel && channel.id == props.channel.id && !props.channel.isFavourite}
 
             className={
-               props.channel && channel.id != props.channel.id ? classes.item : classes.activex
+              
+               (props.channel && channel.id == props.channel.id) && !props.channel.isFavourite ? classes.activex : classes.item 
               }
 
               
@@ -118,7 +119,7 @@ function Channels(props) {
 
   return (
     <>
-      <Menu.Menu className={classes.menu}>
+      <Menu.Menu className={classes.menu} style={{marginTop:'35px'}}>
         <Menu.Item className={classes.item}>
           <span>
             <Icon name="exchange" /> Channels

@@ -15,13 +15,12 @@ function MessageHeader(props) {
             "# " + props.channelName
           )}
 
-          {props.isPrivateChat ? (
-            ""
-          ) : (
-            <Icon onClick={props.starChange} 
-            
-            name={props.starred?"star":"star outline"}
-            color={props.starred?"yellow":"black"}
+          {!props.isPrivateChat && (
+            <Icon
+              onClick={props.starChange}
+              name={props.starred ? "star" : "star outline"}
+              color={props.starred ? "yellow" : "black"}
+              style={{pointer:'cursor !important'}}
             />
           )}
         </span>

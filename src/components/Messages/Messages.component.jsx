@@ -8,9 +8,12 @@ import MessageContent from "./MessageContent/MessageContent.component";
 import { Comment, Segment } from "semantic-ui-react";
 import classes from "./Messages.component.module.css";
 
+import {setfavouriteChannel, removefavouriteChannel} from "../../store/actioncreator"
+
 function Messages(props) {
   const messageRef = firebase.database().ref("messages");
-  const usersRef=firebase.database().ref("users");
+
+  const usersRef = firebase.database().ref('users');
 
   const [messagesState, setMessagesState] = useState([]);
 
@@ -28,7 +31,7 @@ function Messages(props) {
           return updatedState;
         });
       });
-      return () => messageRef.child(props.channel.id).off;
+      return () => messageRef.child(props.channel.id).off();
     }
   }, [props.channel]);
 
@@ -36,20 +39,19 @@ function Messages(props) {
 
   useEffect(() => {
     if (props.user) {
-      
-      usersRef.child(props.user.uid).child("favourite")
-      .on("child_added", (snap) => {
-        
-      });
+        usersRef.child(props.user.uid).child("favourite")
+            .on('child_added', (snap) => {
+                props.setfavouriteChannel(snap.val());
+            })
 
-      usersRef.child(props.user.uid).child("favourite")
-      .on("child_removed", (snap) => {
-        
-      });
+        usersRef.child(props.user.uid).child("favourite")
+            .on('child_removed', (snap) => {
+                props.removefavouriteChannel(snap.val());
+            })
 
-      return () => usersRef.child(props.user.uid).child("favourite").off();
+        return () => usersRef.child(props.user.uid).child("favourite").off();
     }
-  }, [props.channel]);
+  }, [props.user]);
 
 
 
@@ -97,19 +99,25 @@ function Messages(props) {
       return messages;
   }
 
-  const starChange=()=>{
+  const starChange = () => {
+    let favouriteRef = usersRef.child(props.user.uid).child("favourite").child(props.channel.id);
+    if (isStarred()) {
+        favouriteRef.remove();
+    } else {
+        favouriteRef.set({ channelId: props.channel.id, channelName: props.channel.name })
+    }
+}
 
-  }
 
-  const isStarred=()=>{
-      
-  }
+const isStarred = () => {
+    return Object.keys(props.favouriteChannels).includes(props.channel?.id);
+}
 
   return (
     <div className={classes.messageContainer}>
       <MessageHeader
-        starChange={starchange}
-        starred={false}
+        starChange={starChange}
+        starred={isStarred()}
         channelName={props.channel?.name}
         isPrivateChat={props.channel?.isPrivateChat}
         uniqueUsers={uniqueusersCount()}
@@ -130,7 +138,17 @@ const mapStateToProps = (state) => {
   return {
     channel: state.channel.currentChannel,
     user: state.user.currentUser,
+    favouriteChannels: state.favouriteChannel.favouriteChannel
   };
 };
 
-export default connect(mapStateToProps)(Messages);
+
+const mapDispatchToProps=(dispatch) => {
+    return {
+        setfavouriteChannel: (channel) => dispatch(setfavouriteChannel(channel)),
+        removefavouriteChannel: (channel) => dispatch(removefavouriteChannel(channel)),
+    }
+}
+
+
+export default connect(mapStateToProps,mapDispatchToProps)(Messages);

@@ -34,21 +34,20 @@ let defaultFavouriteChannelState ={
     favouriteChannel: {}
 }
 
-const favouriteChannelReducer =(state=defaultFavouriteChannelState, action)=>{
-    if(action.type===SET_FAVOURITECHANNEL){
-        let payload = action.payload;
-        let updatedState={...state.favouriteChannel};
-        updatedState[payload.channelId]=payload.channelName
-        return {favouriteChannel : updatedState};
-    }
 
-   else if(action.type===REMOVE_FAVOURITECHANNEL){
-        let payload = action.payload; 
-        let updatedState={...state.favouriteChannel};
-       delete updatedState[payload.channelId];
-        return {favouriteChannel : updatedState};
+const favouriteChannelReducer = (state = defaultFavouriteChannelState, action) => {
+    if (action.type === SET_FAVOURITECHANNEL) {
+        let payload = action.payload.favouriteChannel;
+        let updatedState = { ...state.favouriteChannel };
+        updatedState[payload.channelId] = payload.channelName;
+        return { favouriteChannel: updatedState };
+    } else if (action.type === REMOVE_FAVOURITECHANNEL) {
+        let payload = action.payload.favouriteChannel;
+        let updatedState = { ...state.favouriteChannel };
+        delete updatedState[payload.channelId];
+        return { favouriteChannel: updatedState };
     }
     return state;
 }
 
-export const combinedReducers = combineReducers({user:userReducer, channel:channelReducer, favouriteChannel:favouriteChannelReducer})
+export const combinedReducers = combineReducers({user:userReducer, channel:channelReducer, favouriteChannel : favouriteChannelReducer})
