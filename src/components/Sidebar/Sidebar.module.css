@@ -2,5 +2,6 @@
 
 .sideBar{
     font-size: 1.2rem;
-    background: var(--primary-color) !important
+    background: var(--primary-color) !important;
+    overflow-y:scroll !important;
 }

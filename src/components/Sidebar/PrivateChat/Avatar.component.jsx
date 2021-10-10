@@ -9,8 +9,6 @@ function Avatar(props) {
 
       <Image src={props.message.photoURL} avatar></Image>
       <span style={{fontSize: '0.9rem'}}>{props.userName}
-      {/* <Icon name="circle" color={`${props.connectedUsersState.indexOf(props.message.id)!==-1?"green":"red"}`} style={{right: "0"}}/> */}
-     
       </span>
       
 

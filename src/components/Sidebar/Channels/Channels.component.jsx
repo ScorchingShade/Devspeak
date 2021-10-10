@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import firebase from "../../../server/firebase";
 import classes from "./Channels.module.css";
 import { setChannel } from "../../../store/actioncreator";
+import { Notification } from "../Notification/Notification.component";
 
 function Channels(props) {
   const [isLoading, setIsLoading] = useState(false);
@@ -15,6 +16,7 @@ function Channels(props) {
   });
 
   const channelsRef = firebase.database().ref("channels");
+  const usersRef = firebase.database().ref("users");
 
   useEffect(() => {
     channelsRef.on("child_added", (snap) => {
@@ -61,7 +63,7 @@ function Channels(props) {
             key={channel.id}
             name={channel.name}
             
-            onClick={() => props.selectChannel(channel)}
+            onClick={() => selectChannel(channel)}
             active={props.channel && channel.id == props.channel.id && !props.channel.isFavourite}
 
             className={
@@ -71,12 +73,28 @@ function Channels(props) {
 
               
           >
-           <span style={{fontSize: '1rem'}}> {`# ${channel.name}`}</span>
+            <Notification user={props.user} channel={props.channel}
+                        notificationChannelId={channel.id}
+                        displayName= {channel.name} 
+                        typeName="channel"
+                        />
           </Menu.Item>
         );
       });
     }
   };
+
+  const selectChannel = (channel) => {
+    setLastVisited(props.user,props.channel);
+    setLastVisited(props.user,channel);
+    props.selectChannel(channel);
+}
+
+  const setLastVisited = (user, channel) => {
+    const lastVisited = usersRef.child(user.uid).child("lastVisited").child(channel.id);
+    lastVisited.set(firebase.database.ServerValue.TIMESTAMP);
+    lastVisited.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
+}
 
   const onSubmit = () => {
     if (!checkIfFormValid()) {

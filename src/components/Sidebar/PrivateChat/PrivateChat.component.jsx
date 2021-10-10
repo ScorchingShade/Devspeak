@@ -5,6 +5,7 @@ import firebase from "../../../server/firebase";
 import classes from "./PrivateChat.component.module.css";
 import { setChannel } from "../../../store/actioncreator";
 import Avatar from "./Avatar.component";
+import { Notification } from "../Notification/Notification.component";
 
 function PrivateChat(props) {
 
@@ -91,8 +92,13 @@ function PrivateChat(props) {
                props.channel && generateChannelId(user.id) != props.channel.id ? classes.item : classes.activex
               }
           >
-         <Avatar message={user} userName={user.name} userState={connectedUsersState} connectedUsersState={connectedUsersState}/> 
-         <Icon name="circle" color={`${connectedUsersState.indexOf(user.id)!==-1?"green":"red"}`} style={{marginTop: "-23px"}}/>
+         
+         <Icon name="circle" color={`${connectedUsersState.indexOf(user.id)!==-1?"green":"red"}`} style={{marginTop: "15px"}}/>
+         <Notification user={props.user} channel={props.channel}
+                        notificationChannelId={generateChannelId(user.id)}
+                        displayName={user.name}
+                        message={user} 
+                        typeName="privateChat"/>
           </Menu.Item>
         );
       });
@@ -102,8 +108,16 @@ function PrivateChat(props) {
   const selectUser = (user)=>{
       let userTemp ={...user}
       userTemp.id=generateChannelId(user.id);
+      setLastVisited(props.user, props.channel);
+      setLastVisited(props.user, userTemp);
     props.selectChannel(userTemp)
   }
+
+  const setLastVisited = (user, channel) => {
+    const lastVisited = usersRef.child(user.uid).child("lastVisited").child(channel.id);
+    lastVisited.set(firebase.database.ServerValue.TIMESTAMP);
+    lastVisited.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
+}
 
   const generateChannelId=(userId)=>{
       if(props.user.uid < userId){
