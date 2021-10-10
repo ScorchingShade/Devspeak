@@ -32,6 +32,27 @@ function Messages(props) {
     }
   }, [props.channel]);
 
+
+
+  useEffect(() => {
+    if (props.user) {
+      
+      usersRef.child(props.user.uid).child("favourite")
+      .on("child_added", (snap) => {
+        
+      });
+
+      usersRef.child(props.user.uid).child("favourite")
+      .on("child_removed", (snap) => {
+        
+      });
+
+      return () => usersRef.child(props.user.uid).child("favourite").off();
+    }
+  }, [props.channel]);
+
+
+
   const displayMessages = () => {
       let messagesToDisplay =searchTermState ? filterMessageBySearchTerm():messagesState
     if (messagesToDisplay.length > 0) {
@@ -78,6 +99,10 @@ function Messages(props) {
 
   const starChange=()=>{
 
+  }
+
+  const isStarred=()=>{
+      
   }
 
   return (
